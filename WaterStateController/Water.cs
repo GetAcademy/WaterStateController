@@ -10,7 +10,7 @@
         public WaterState State { get; }
         public int Temperature { get; }
         public int Amount { get; }
-        public double Proportion { get; }
+        public double ProportionFirstState { get; }
 
         public void AddEnergy(int i)
         {
