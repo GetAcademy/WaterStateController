@@ -9,6 +9,13 @@
 
         public WaterState State { get; }
         public int Temperature { get; }
+        public int Amount { get; }
+        public double Proportion { get; }
+
+        public void AddEnergy(int i)
+        {
+            
+        }
     }
 
     public enum WaterState
