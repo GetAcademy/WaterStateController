@@ -8,7 +8,7 @@ namespace WaterStateControllerTest
     public class WaterStateControllerTest
     {
         [TestMethod]
-        public void TestWaterAt20Degrees()
+        public void Test01WaterAt20Degrees()
         {
             var water = new Water(50, 20);
             Assert.AreEqual(WaterState.Fluid, water.State);
@@ -17,7 +17,7 @@ namespace WaterStateControllerTest
         }
 
         [TestMethod]
-        public void TestWaterAtMinus20Degrees()
+        public void Test02WaterAtMinus20Degrees()
         {
             var water = new Water(50, -20);
             Assert.AreEqual(WaterState.Ice, water.State);
@@ -25,7 +25,7 @@ namespace WaterStateControllerTest
         }
 
         [TestMethod]
-        public void TestWaterAt120Degrees()
+        public void Test03WaterAt120Degrees()
         {
             var water = new Water(50, 120);
             Assert.AreEqual(WaterState.Gas, water.State);
@@ -35,21 +35,38 @@ namespace WaterStateControllerTest
         [TestMethod]
         [ExpectedException(typeof(ArgumentException),
             "When temperature is 0 or 100, you must provide a value for proportion")]
-        public void TestWaterAt100DegreesWithoutProportion()
+        public void Test04WaterAt100DegreesWithoutProportion()
         {
             var water = new Water(50, 100);
         }
 
         [TestMethod]
-        public void TestWaterAt100Degrees()
+        public void Test05WaterAt100Degrees()
         {
-            var water = new Water(50, 100, 30);
+            var water = new Water(50, 100, 0.3);
+            Assert.AreEqual(WaterState.FluidAndGas, water.State);
+            Assert.AreEqual(100, water.Temperature);
+            Assert.AreEqual(0.3, water.ProportionFirstState);
+        }
+
+        [TestMethod]
+        public void Test06WaterAt100Degrees()
+        {
+            var water = new Water(50, 100, 0.3);
             Assert.AreEqual(WaterState.FluidAndGas, water.State);
             Assert.AreEqual(100, water.Temperature);
         }
 
         [TestMethod]
-        public void TestAddEnergy1()
+        public void Test07WaterAt100Degrees()
+        {
+            var water = new Water(50, 100, 0.3);
+            Assert.AreEqual(WaterState.FluidAndGas, water.State);
+            Assert.AreEqual(100, water.Temperature);
+        }
+
+        [TestMethod]
+        public void Test08AddEnergy1()
         {
             var water = new Water(4, 10);
             water.AddEnergy(10);
@@ -57,7 +74,7 @@ namespace WaterStateControllerTest
         }
 
         [TestMethod]
-        public void TestAddEnergy2()
+        public void Test09AddEnergy2()
         {
             var water = new Water(4, -10);
             water.AddEnergy(10);
@@ -65,17 +82,17 @@ namespace WaterStateControllerTest
         }
 
         [TestMethod]
-        public void TestAddEnergy3()
+        public void Test10AddEnergy3()
         {
             var water = new Water(4, -10);
-            water.AddEnergy(170);
+            water.AddEnergy(200);
             Assert.AreEqual(0, water.Temperature);
             Assert.AreEqual(WaterState.IceAndFluid, water.State);
             Assert.AreEqual(0.5, water.ProportionFirstState);
         }
 
         [TestMethod]
-        public void TestAddEnergy4()
+        public void Test11AddEnergy4()
         {
             var water = new Water(4, -10);
             water.AddEnergy(330);
@@ -85,7 +102,7 @@ namespace WaterStateControllerTest
         }
 
         [TestMethod]
-        public void TestAddEnergy5()
+        public void Test12AddEnergy5()
         {
             var water = new Water(4, -10);
             water.AddEnergy(370);
@@ -94,7 +111,7 @@ namespace WaterStateControllerTest
         }
 
         [TestMethod]
-        public void TestAddEnergy6()
+        public void Test13AddEnergy6()
         {
             var water = new Water(4, 100, 1);
             water.AddEnergy(370);
