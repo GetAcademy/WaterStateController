@@ -34,24 +34,67 @@ namespace WaterStateController
 
         public void AddEnergy(double calories)
         {
-            //var nextPhaseChangeTemperature = 
-            //    Temperature < 0 ? 0 : 
-            //    Temperature < 100 ? (int?)100 : 
-            //    null;
-            var caloriesPerGram = calories / Amount;
-            var temperature = Temperature + caloriesPerGram;
-            if (!(temperature > 0) || !(Temperature < 0))
-            {
-                Temperature = temperature;
-                return;
-            }
+            if (IsStateChange(calories)) return;
 
-            State = WaterState.IceAndFluid;
+            if (Temperature < 0) calories = HeatTo(calories, 0);
+            if (Temperature == 0 && State != WaterState.Fluid) calories = DoStateChangeAsMuchAsPossible(calories);
+            if (Temperature < 100) calories = HeatTo(calories, 100);
+            if (Temperature == 100 && State != WaterState.Gas) calories = DoStateChangeAsMuchAsPossible(calories);
+            HeatMax(calories);
+
+
             var caloriesForHeatingToZero = -Temperature * Amount;
             calories -= caloriesForHeatingToZero;
             var caloriesForMeltingEverything = CaloriesMeltIcePerGram * Amount;
-            ProportionFirstState = 1 - calories / caloriesForMeltingEverything;
             Temperature = 0;
+            State = WaterState.Fluid;
+            if (calories < caloriesForMeltingEverything)
+            {
+                ProportionFirstState = 1 - calories / caloriesForMeltingEverything;
+                State = WaterState.IceAndFluid;
+            }
+            else if (calories > caloriesForMeltingEverything)
+            {
+                calories -= caloriesForMeltingEverything;
+                Temperature = calories / Amount;
+            }
+        }
+
+        private double DoStateChangeAsMuchAsPossible(double calories)
+        {
+
+        }
+
+        private double HeatTo(double calories, int temperature)
+        {
+            if (calories <= 0) return 0;
+            var caloriesForHeating = (temperature - Temperature) * Amount;
+            if (!(calories >= caloriesForHeating)) return HeatMax(calories);
+            Temperature = temperature;
+            return calories - caloriesForHeating;
+        }
+
+        private double HeatMax(double calories)
+        {
+            if (calories <= 0) return 0;
+            var temperatureChange = calories / Amount;
+            Temperature += temperatureChange;
+            return 0;
+        }
+
+        private bool IsStateChange(double calories)
+        {
+            var caloriesPerGram = calories / Amount;
+            var newTemperature = Temperature + caloriesPerGram;
+            var isStateChange =
+                (Temperature < 0 && newTemperature > 0) ||
+                (Temperature < 100 && newTemperature > 100);
+            if (isStateChange)
+            {
+                Temperature = newTemperature;
+            }
+
+            return isStateChange;
         }
     }
 
