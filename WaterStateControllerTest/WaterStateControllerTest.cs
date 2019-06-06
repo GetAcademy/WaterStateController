@@ -118,5 +118,23 @@ namespace WaterStateControllerTest
             Assert.AreEqual(WaterState.FluidAndGas, water.State);
             Assert.AreEqual(0.9, water.ProportionFirstState);
         }
+
+        [TestMethod]
+        public void Test14FluidToGasB()
+        {
+            var water = new Water(10, 70);
+            water.AddEnergy(6300);
+            Assert.AreEqual(100, water.Temperature);
+            Assert.AreEqual(WaterState.Gas, water.State);
+        }
+
+        [TestMethod]
+        public void Test14FluidToGasC()
+        {
+            var water = new Water(10, 70);
+            water.AddEnergy(6400);
+            Assert.AreEqual(110, water.Temperature);
+            Assert.AreEqual(WaterState.Gas, water.State);
+        }
     }
 }
